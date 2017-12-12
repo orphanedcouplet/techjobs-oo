@@ -51,21 +51,17 @@ public class JobController {
             return "new-job";
         }
 
-        JobFieldData<Employer> employerJobFieldData = new JobFieldData<>();
-        JobFieldData<Location> locationJobFieldData = new JobFieldData<>();
-        JobFieldData<PositionType> positionTypeJobFieldData = new JobFieldData<>();
-        JobFieldData<CoreCompetency> coreCompetencyJobFieldData = new JobFieldData<>();
-
         String name = jobForm.getName();
-        Employer employer = employerJobFieldData.findById(jobForm.getEmployerId());
-        Location location = locationJobFieldData.findById(jobForm.getLocationId());
-        PositionType positionType = positionTypeJobFieldData.findById(jobForm.getPositionTypeId());
-        CoreCompetency coreCompetency = coreCompetencyJobFieldData.findById(jobForm.getCoreCompetencyId());
+        Employer employer = jobData.getEmployers().findById(jobForm.getEmployerId());
+        Location location = jobData.getLocations().findById(jobForm.getLocationId());
+        PositionType positionType = jobData.getPositionTypes().findById(jobForm.getPositionTypeId());
+        CoreCompetency coreCompetency = jobData.getCoreCompetencies().findById(jobForm.getCoreCompetencyId());
+
+        JobFieldData<JobField> jobFieldData = new JobFieldData<>();
 
         Job job = new Job(name, employer, location, positionType, coreCompetency);
 
-        // TODO fix bug: this is adding the job, but only the name field works - why??
-        JobData.getInstance().add(job);
+        jobData.add(job);
 
         return MessageFormat.format("redirect:?id={0}", job.getId());
 
